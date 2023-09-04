@@ -37,8 +37,8 @@ public class PulsarBrokerUrlValidator implements Validator {
           protocol = input.substring(0, input.indexOf(":"));
           
           if (isSupportedProtocol(protocol)) {
-            hostAndPort = input.substring(input.lastIndexOf("/"), input.length());
-            return StandardValidators.HOSTNAME_PORT_LIST_VALIDATOR.validate(subject, hostAndPort, context);
+            //hostAndPort = input.substring(input.lastIndexOf("/"), input.length());
+            //return StandardValidators.HOSTNAME_PORT_LIST_VALIDATOR.validate(subject, hostAndPort, context);
           } else {
         	valid = false;
         	explanation = UNSUPPORTED_PROTOCOL;

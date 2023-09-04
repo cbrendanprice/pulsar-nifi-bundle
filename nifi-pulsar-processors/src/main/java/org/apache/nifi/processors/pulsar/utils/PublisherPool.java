@@ -16,6 +16,8 @@
  */
 package org.apache.nifi.processors.pulsar.utils;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.nifi.logging.ComponentLog;
 import org.apache.pulsar.client.api.Producer;
@@ -67,9 +69,16 @@ public class PublisherPool implements Closeable {
             return null;
         }
         
-        final Map<String, Object> properties = new HashMap<>(pulsarProducerProperties);
+        Map<String, Object> properties = new HashMap<>(pulsarProducerProperties);
+        final boolean autoUpdatePartitions = (boolean)properties.remove("autoUpdatePartitions");
+        final int autoUpdatePartitionsInterval = (int)properties.remove("autoUpdatePartitionsInterval");
+        final int batchingMaxBytes = (int)properties.remove("batchingMaxBytes");
+
         Producer producer = pulsarClient.newProducer()
                 .topic(topicName)
+                .autoUpdatePartitions(autoUpdatePartitions)
+                .autoUpdatePartitionsInterval(autoUpdatePartitionsInterval, TimeUnit.SECONDS)
+                .batchingMaxBytes(batchingMaxBytes)
                 .loadConf(properties)
                 .create();
 
